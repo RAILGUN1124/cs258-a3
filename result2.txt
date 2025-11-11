@@ -1,0 +1,75 @@
+============================================================
+PHASE 1: Pings with normal L2 switching (BEFORE custom OpenFlow rules)
+============================================================
+
+
+From h1 to h3:
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=64 time=0.523 ms
+
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.523/0.523/0.523/0.000 ms
+
+
+------------------------------------------------------------
+From h2 to h3:
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=64 time=0.274 ms
+
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.274/0.274/0.274/0.000 ms
+
+
+------------------------------------------------------------
+
+
+
+
+============================================================
+PHASE 2: Pings AFTER adding custom OpenFlow rules
+============================================================
+
+
+OpenFlow commands used (run from another terminal):
+$ sudo ovs-ofctl show s1
+$ sudo ovs-ofctl dump-flows s1
+$ sudo ovs-ofctl del-flows s1
+$ sudo ovs-ofctl add-flow s1 "priority=100,in_port=2,actions=drop"
+$ sudo ovs-ofctl add-flow s1 "priority=100,in_port=1,actions=output:3"
+$ sudo ovs-ofctl add-flow s1 "priority=100,in_port=3,actions=output:1"
+
+
+------------------------------------------------------------
+
+
+From h1 to h3:
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+64 bytes from 10.0.0.3: icmp_seq=1 ttl=64 time=0.240 ms
+
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 1 received, 0% packet loss, time 0ms
+rtt min/avg/max/mdev = 0.240/0.240/0.240/0.000 ms
+
+
+------------------------------------------------------------
+From h2 to h3:
+PING 10.0.0.3 (10.0.0.3) 56(84) bytes of data.
+
+
+--- 10.0.0.3 ping statistics ---
+1 packets transmitted, 0 received, 100% packet loss, time 0ms
+
+
+
+
+------------------------------------------------------------
+
+
+
+
+
